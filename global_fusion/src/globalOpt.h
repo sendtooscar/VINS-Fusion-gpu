@@ -44,18 +44,26 @@ class GlobalOptimization
 public:
 	GlobalOptimization();
 	~GlobalOptimization();
+	void set_map_theta(double map_thetat,bool map_theta_optimizet);
 	void inputGPS(double t, double latitude, double longitude, double altitude, double posAccuracy);
+	void inputGPSviz(double t, double latitude, double longitude, double altitude, double posAccuracy);
      void inputGPSPR(double t, double latitude, double longitude, double altitude, double posAccuracy);
      void inputPPKviz(double t, double latitude, double longitude, double altitude, double posAccuracy);
      void inputFRLviz(double t, double latitude, double longitude, double altitude, double w, double x, double y, double z);
 	void inputOdom(double t, Eigen::Vector3d OdomP, Eigen::Quaterniond OdomQ);
+	void inputLoam(double t, Eigen::Vector3d OdomP, Eigen::Quaterniond OdomQ);
 	void getGlobalOdom(Eigen::Vector3d &odomP, Eigen::Quaterniond &odomQ);
      void GPS2XYZ(double latitude, double longitude, double altitude, double* xyz);
      void pointAssociateToMap(PointType const *const pi, PointType *const po);
+     void transformUpdate();
+     void transformAssociateToMap();
      void inputRot(double t, double q_w, double q_x, double q_y, double q_z, double rotAccuracy);
      void inputMag(double t, double mag_x, double mag_y, double mag_z, double magAccuracy);
      void inputSurfnCorners(double t,pcl::PointCloud<PointType>::Ptr& laserCloudCornerLast ,pcl::PointCloud<PointType>::Ptr& laserCloudSurfLast);
      //void inputCloudFullRes(double t,pcl::PointCloud<PointType>::Ptr& laserCloudFullRes);
+     bool isbusy();
+     double getLoamTime();
+     bool getLoamOdom(double time, Eigen::Vector3d &odomP, Eigen::Quaterniond &odomQ);
 	nav_msgs::Path global_path;
      nav_msgs::Path gps_path; 
      nav_msgs::Path ppk_path;
@@ -85,7 +93,7 @@ public:
 	int laserCloudValidInd[125];
 	int laserCloudSurroundInd[125];
 
-     double timeLaserCloud = 0.0;
+    double timeLaserCloud = 0.0;
 	
 	// input: from odom
 	pcl::PointCloud<PointType>::Ptr laserCloudCornerLast;
@@ -120,16 +128,32 @@ public:
 	Eigen::Quaterniond q_w_curr;
 	Eigen::Vector3d t_w_curr;
 
-     Eigen::Quaterniond q_I_L;
+	Eigen::Quaterniond q_wmap_wodom;
+	Eigen::Vector3d t_wmap_wodom;
+
+	Eigen::Quaterniond q_wodom_curr;
+	Eigen::Vector3d t_wodom_curr;
+
+    Eigen::Quaterniond q_I_L;
 	Eigen::Vector3d t_I_L;
 
-     //downsample filters
+	double map_theta;
+    bool map_theta_optimize;
+
+	Eigen::Vector3d p_loam_pre;
+	Eigen::Vector3d p_loam;
+	Eigen::Quaterniond q_loam_pre;
+	Eigen::Quaterniond q_loam;
+    int pre_loam_i;
+    bool initLoamMap;
+
+    //downsample filters
 	pcl::VoxelGrid<PointType> downSizeFilterCorner;
 	pcl::VoxelGrid<PointType> downSizeFilterSurf;
 
 	//point selections to support pointwise iteration	
 	PointType pointOri, pointSel;
-     std::vector<int> pointSearchInd;
+    std::vector<int> pointSearchInd;
 	std::vector<float> pointSearchSqDis;
 
 
@@ -137,16 +161,21 @@ private:
 	
 	void optimize();
 	void updateGlobalPath();
+	void do_loam_mapping_prep();
+	void do_loam_mapping_optimize();
+	void do_loam_mapping_map_update();
 
 	// format t, tx,ty,tz,qw,qx,qy,qz
 	map<double, vector<double>> localPoseMap;
 	map<double, vector<double>> globalPoseMap;
-     map<double, vector<double>> globalRotMap;
+    map<double, vector<double>> globalRotMap;
 	map<double, vector<double>> GPSPositionMap;
-     map<double, vector<double>> GPSPRPositionMap;
-     map<double, vector<double>> PPKPositionMap;
-     map<double, vector<double>> FRLPoseMap;
-     map<double, vector<double>> magMap;
+	map<double, vector<double>> GPSPositionMapViz;
+    map<double, vector<double>> GPSPRPositionMap;
+    map<double, vector<double>> PPKPositionMap;
+    map<double, vector<double>> FRLPoseMap;
+    map<double, vector<double>> magMap;
+    map<double, vector<double>> loamPoseMap;
 	bool initGPS;
 	bool newGPS;
 	bool newGPSPR;
@@ -155,6 +184,7 @@ private:
      bool newCloudFullRes;
      bool newCloud;
      bool flag_lidar_sync;
+     bool newLoam;
 	
 	GeographicLib::LocalCartesian geoConverter;
 	Eigen::Matrix4d WGPS_T_WVIO;

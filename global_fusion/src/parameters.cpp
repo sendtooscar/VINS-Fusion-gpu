@@ -67,6 +67,29 @@ int SHOW_TRACK;
 int FLOW_BACK;
 
 
+double MAP_THETA;
+int MAP_THETA_OPTIMIZE;
+std::string PPK_PATH;
+std::string FRL_PATH;
+int VIZ_PPK;
+int VIZ_FRL;
+int USE_MAG;
+int USE_GPS;
+int USE_FRL_ROT;
+int USE_FRL;
+int USE_PPK;
+
+/*map_theta: 0   # so that gps path has the correct rotation to visualize
+map_theta_optimize : false # automatically optimizes mapped theta
+ppk_path: "test"  # this is the ppk file path
+frl_path: "test"  # this is the path of the frl file having all the data
+viz_ppk: false    # this visualizes ppk
+viz_frl: false    # this visualizes ppk
+use_mag: false    # to enable yaw updates
+use_gps: false    # to do gps update
+use_frl_rot : false # updates using the rotation of the FRL file*/
+
+
 template <typename T>
 T readParam(ros::NodeHandle &n, std::string name)
 {
@@ -251,6 +274,20 @@ void readParameters(std::string config_file)
         cv::cv2eigen(rectify_right, rectify_R_right);
 
     }
+
+    
+    MAP_THETA = fsSettings["map_theta"];
+    MAP_THETA_OPTIMIZE = fsSettings["map_theta_optimize"];
+    fsSettings["ppk_path"] >>  PPK_PATH;
+    fsSettings["frl_path"] >>  FRL_PATH;
+    VIZ_PPK = fsSettings["viz_ppk"];
+    VIZ_FRL = fsSettings["viz_frl"];
+    USE_MAG = fsSettings["use_mag"];
+    USE_GPS = fsSettings["use_gps"];
+    USE_FRL_ROT = fsSettings["use_frl_rot"];
+    USE_FRL = fsSettings["use_frl"];
+
+
 
     fsSettings.release();
 }

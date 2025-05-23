@@ -8,8 +8,16 @@
   <joint name="velodyne_joint" type="fixed">
     <parent link="camera" />
     <child link="velodyne" />
-    <!--origin xyz="-0.0560 0.3639 0.0700" rpy="-1.4292 -1.4493 -0.1365" /-->
-    <origin xyz="-0.0560 0.3639 0.0700" rpy="-1.57 +1.57 -0.0" />
+    <origin xyz="-0.0560 0.3639 0.0700" rpy="-1.4292 -1.4493 -0.1365" />
+    <!--origin xyz="-0.0560 0.3639 0.0700" rpy="-1.57 +1.57 -0.0" /-->
+  </joint> 
+
+  <link name="imu_link"> </link>
+  <joint name="imu_link_joint" type="fixed">
+    <parent link="camera" />
+    <child link="imu_link" />
+    <origin xyz="-0.04 0.04 0.04" rpy="0 0 1.57" />
+    <!--origin xyz="-0.0560 0.3639 0.0700" rpy="-1.57 +1.57 -0.0" /-->
   </joint> 
 
 </robot>

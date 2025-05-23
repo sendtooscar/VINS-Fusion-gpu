@@ -31,6 +31,7 @@ include_directories(${catkin_INCLUDE_DIRS} ${CERES_INCLUDE_DIRS})
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(Eigen3)
 include_directories(
+  /src/loam/
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
@@ -69,6 +70,9 @@ target_link_libraries(vins_node vins_lib)
 
 add_executable(vscanRegistration src/scanRegistration.cpp)
 target_link_libraries(vscanRegistration ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(vlaserMapping src/laserMapping.cpp)
+target_link_libraries(vlaserMapping ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${CERES_LIBRARIES})
 
 #add_executable(kitti_odom_test src/KITTIOdomTest.cpp)
 #target_link_libraries(kitti_odom_test vins_lib) 

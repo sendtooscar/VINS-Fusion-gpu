@@ -19,7 +19,19 @@ use_loam: 1    # performs a loam thread
 point_cloud_topic: "/velodyne_points" #/scan default
 use_dense_cloud: 1  # if 0 uses the current scan only for depth enhancement
 lidar_skip: 3
-   
+
+
+map_theta: 50   # so that gps path has the correct rotation to visualize
+map_theta_optimize : 0 # automatically optimizes mapped theta
+ppk_path: "/storage_ssd/bell412_dataset1/bell412_dataset1_ppk.pos"  # this is the ppk file path
+frl_path: "/storage_ssd/bell412_dataset1/bell412_dataset1_frl.pos"  # this is the path of the frl file having all the data
+viz_ppk: 1    # this visualizes ppk
+viz_frl: 1    # this visualizes ppk
+use_mag: 0    # to enable yaw updates
+use_gps: 0    # to do gps update
+use_frl_rot : 1 # updates using the rotation of the FRL file
+use_frl : 0 # updates using the rotation of the FRL file
+use_ppk : 0
 
 # Extrinsic parameter between IMU and Camera.
 estimate_extrinsic: 0   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.

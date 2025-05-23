@@ -55,15 +55,15 @@
 #include <string>
 
 #include <sensor_msgs/NavSatFix.h>
-#include "geodetic_conv.hpp"
+#include "loam/geodetic_conv.hpp"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 
 
-#include "lidarFactor.hpp"
-#include "common.h"
-#include "tic_toc.h"
-#include "utility.h"
+#include "loam/lidarFactor.hpp"
+#include "loam/common.h"
+#include "loam/tic_toc.h"
+#include "loam/utility.h"
 
 #include "nmea_msgs/Sentence.h"
 #include <fstream>
@@ -1479,7 +1479,7 @@ void process()
 				pcl::toROSMsg(laserCloudMap, laserCloudMsg);
 				laserCloudMsg.header.stamp = ros::Time().fromSec(timeLaserOdometry);
 				laserCloudMsg.header.frame_id = "/odom";
-				pubLaserCloudMap.publish(laserCloudMsg);
+				// pubLaserCloudMap.publish(laserCloudMsg); //rav
 			}
 
 			int laserCloudFullResNum = laserCloudFullRes->points.size();
@@ -1492,7 +1492,7 @@ void process()
 			pcl::toROSMsg(*laserCloudFullRes, laserCloudFullRes3);
 			laserCloudFullRes3.header.stamp = ros::Time().fromSec(timeLaserOdometry);
 			laserCloudFullRes3.header.frame_id = "/odom";
-			pubLaserCloudFullRes.publish(laserCloudFullRes3);
+			pubLaserCloudFullRes.publish(laserCloudFullRes3); 
 
 			////printf("mapping pub time %f ms \n", t_pub.toc());
 

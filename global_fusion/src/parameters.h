@@ -133,6 +133,18 @@ extern double F_THRESHOLD;
 extern int SHOW_TRACK;
 extern int FLOW_BACK;
 
+extern double MAP_THETA;
+extern int MAP_THETA_OPTIMIZE;
+extern std::string PPK_PATH;
+extern std::string FRL_PATH;
+extern int VIZ_PPK;
+extern int VIZ_FRL;
+extern int USE_MAG;
+extern int USE_GPS;
+extern int USE_FRL_ROT;
+extern int USE_FRL;
+extern int USE_PPK;
+
 void readParameters(std::string config_file);
 
 enum SIZE_PARAMETERIZATION

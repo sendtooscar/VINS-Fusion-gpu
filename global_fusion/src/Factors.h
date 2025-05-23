@@ -51,6 +51,31 @@ struct TError
 
 };
 
+struct TrajError
+{
+	TrajError(Eigen::Vector3d WG_p_B, Eigen::Vector3d WV_p_B, double var)
+				  :WG_p_B(WG_p_B), WV_p_B(WV_p_B), var(var){}
+
+	template <typename T>
+	bool operator()(const T* theta, T* residuals) const
+	{
+		residuals[0] = (T(WG_p_B.x()) - cos(theta[0])*T(WV_p_B.x()) + sin(theta[0])*T(WV_p_B.y())) / T(var);
+		residuals[1] = (T(WG_p_B.y()) - sin(theta[0])*T(WV_p_B.x()) - cos(theta[0])*T(WV_p_B.y())) / T(var);
+		residuals[2] = (T(WG_p_B.z()) - T(WV_p_B.z())) / T(var);
+
+		return true;
+	}
+
+	static ceres::CostFunction* Create(const Eigen::Vector3d WG_p_B,const Eigen::Vector3d WV_p_B,const double var) 
+	{
+	  return (new ceres::AutoDiffCostFunction<
+	          TrajError, 1, 3>(
+	          	new TrajError(WG_p_B, WV_p_B, var)));
+	}
+     Eigen::Vector3d WG_p_B, WV_p_B;
+	double var;
+
+};
 
 struct XYError
 {

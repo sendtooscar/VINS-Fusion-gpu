@@ -1,0 +1,24 @@
+<launch>
+    <!-- -->
+    <!--remap from="/camera/image_mono" to="/camera/mono"/-->
+    <param name="robot_description" command="$(find xacro)/xacro $(find vins)/launch/include/config/payload_NRC.urdf.xacro --inorder" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher1" respawn="true"/>
+    <node pkg="vins" type="vins_node" name="vins_estimator" output="screen" args="/storage_ssd/catkin_ws/src/VINS-Fusion-gpu/config/euroc/payload_down_NRC1.yaml"/>
+    <node name="rvizvisualisation" pkg="rviz" type="rviz" output="log" args="-d $(find vins)/../config/vins_rviz_config_tk.rviz" />
+    
+
+    <param name="scan_line" type="int" value="16" />
+
+    <!-- if 1, do mapping 10 Hz, if 2, do mapping 5 Hz. Suggest to use 1, it will adjust frequence automaticlly -->
+    <param name="mapping_skip_frame" type="int" value="1" />
+
+    <!-- remove too closed points -->
+    <param name="minimum_range" type="double" value="1.0"/>
+    <!-- remap from="/velodyne_points" to="/scan"/-->  <!--- this was the topic used in sync bags -->
+    <!-- remap from="/velodyne_points" to="/vi_loam/lidar/deskew/cloud_deskewed"/--> <!--- this is the deskew topic from lvi -->
+   
+    <param name="mapping_line_resolution" type="double" value="0.2"/>
+    <param name="mapping_plane_resolution" type="double" value="0.4"/>
+
+    <node pkg="vins" type="vscanRegistration" name="vscanRegistration" output="screen" />
+</launch>

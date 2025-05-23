@@ -60,7 +60,7 @@ const double scanPeriod = 0.1;
 const int systemDelay = 0; 
 int systemInitCount = 0;
 bool systemInited = false;
-bool remove_negx_points = true;
+bool remove_negx_points = false;
 bool overide_intensity = true;
 int N_SCANS = 0;
 float cloudCurvature[400000];
