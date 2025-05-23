@@ -1,5 +1,27 @@
 # VINS-Fusion-gpu
 This repository is a version of VINS-Fusion with GPU acceleration. It can run on Nvidia TX2 in real-time. 
+
+## Steps to run for MUNFRL dataset
+
+1. Download a bag from dataset : https://mun-frl-vil-dataset.readthedocs.io/en/latest/  (m600and bell 412 datasets work with VINS)
+2. Clone this repository to a ros workspace and follow build instructions below
+
+For DJI M600 sequences
+source workspace
+$roslaunch vins vins_lighthouse_vilv1.launch
+second tab---source workspace
+$rosrun global_fusion global_fusion_node <PATH_TO_WORKSPACE>/src/VINS-Fusion-gpu/config/euroc/test_payload_down_lidar.yaml
+$rosbag play <PATH_TO_DATASET>/flight_dataset5_fixed.bag -s 70
+
+For Bell412 sequences
+source workspace
+update <PATH_TO_WORKSPACE>/src/VINS-Fusion-gpu/config/euroc/payload_down_NRC1.yaml with the ppk and frl groundtruth file locations
+$roslaunch vins vins_NRC_vilv1_tk.launch
+second tab---source workspace
+$rosrun global_fusion global_fusion_node <PATH_TO_WORKSPACE>/src/VINS-Fusion-gpu/config/euroc/payload_down_NRC1.yaml
+$rosbag play <PATH_TO_DATASET>/bell412_dataset1/bell412_dataset1.bag -s 80
+
+
 ## 1. Prerequisites  
 The essential software environment is same as VINS-Fusion. Besides, it requires OpenCV cuda version.(Only test it on OpenCV 3.4.1).
 ## 2. Usage
